@@ -110,7 +110,7 @@ class LinkedBinaryTree( BinaryTree ):
     def _delete( self, p ):
         #remove node p and replace it with its child if any
         node = self._validate( p )
-        if self._num_children( p ) == 2: raise ValueError( 'p has two children' )
+        if self.num_children( p ) == 2: raise ValueError( 'p has two children' )
         child = node._left if node._left else node._right
         if child is not None:
             child._parent = node._parent
