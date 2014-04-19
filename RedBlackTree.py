@@ -11,6 +11,17 @@ class RedBlackTree(object):
 			self._tree.SetColor("Black")
 		else:
 			self._tree = self._tree.Insert(n)
+			
+	def _subtree_search( self, node, key ):
+		if key == node._value:
+			return node
+		elif key < node._value:
+			if node._left is not None:
+				return self._subtree_search( node._left, key )
+		else:
+			if node._right is not None:
+				return self._subtree_search( node._right, key )
+		return node
 
 	def Print(self):
 		if self._tree == None:
@@ -190,6 +201,7 @@ class RedBlackTreeNode(object):
 			else:
 				return self.GetRight().Insert(value)
 
+
 	def Print(self, indent):
 		for i in range(indent):
 			print ("  ", end=" ")
@@ -214,3 +226,4 @@ b = RedBlackTree()
 for i in range(10):
 	b.Insert(i)
 b.Print()
+b._subtree_search(b._tree,7).Print(1)
