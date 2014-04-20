@@ -4,6 +4,10 @@
 class RedBlackTree(object):
 	def __init__(self):
 		self._tree = None
+		self.count = 0
+		
+	def Count(self):
+		return self.count
 
 	def Insert(self, key, value):
 		if self._tree == None:
@@ -11,6 +15,7 @@ class RedBlackTree(object):
 			self._tree.SetColor("Black")
 		else:
 			self._tree = self._tree.Insert(key,value)
+		self.count += 1
 			
 	def Find(self, key):
 		return self._subtree_search(self._tree, key)
@@ -20,15 +25,22 @@ class RedBlackTree(object):
 		if node is not None:
 			#Node with no children
 			if node.num_children(node) == 0 :
-				parent = node.GetParent()
-				#Node to delete is on left?
-				if parent.GetLeft() == node:
-					node.SetParent(None)
-					parent.SetLeft(None)
-				#The node we are about to delete is on the right side
+				#Not deleting the single node (root)
+				if self.Count() > 1:
+					parent = node.GetParent()
+					#Node to delete is on left?
+					if parent.GetLeft() == node:
+						node.SetParent(None)
+						parent.SetLeft(None)
+					#The node we are about to delete is on the right side
+					else:
+						node.SetParent(None)
+						parent.SetRight(None)
+				#Tree have only one node, the root
 				else:
-					node.SetParent(None)
-					parent.SetRight(None)
+					self._tree = None
+				
+			self.count -= 1
 
 	def _replace(self, key, newNode):
 		old = self._subtree_search(self._tree, key)
@@ -273,13 +285,13 @@ class RedBlackTreeNode(object):
 				
 				
 b = RedBlackTree()
-for i in range(9):
+for i in range(1):
 	print(i)
 	b.Insert(i, i+10)
 b.Print()
 node = b.Find(0)
 print(node.num_children(node))
-#b.Remove(3)
+b.Remove(0)
 b.Print()
 #node = RedBlackTreeNode(22, 44)
 
