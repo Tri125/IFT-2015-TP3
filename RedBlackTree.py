@@ -17,7 +17,18 @@ class RedBlackTree(object):
 		
 	def Remove(self, key):
 		pass
-			
+	
+
+	def _replace(self, key, newNode):
+		old = self._subtree_search(self._tree, key)
+		if old is not None:
+			old._key = newNode.getKey()
+			old._value = newNode.getValue()
+			old.SetColor(newNode.GetColor())
+			return old
+		else:
+			return false
+	
 	def _subtree_search( self, node, key ):
 		if key == node.getKey():
 			return node
@@ -45,6 +56,12 @@ class RedBlackTreeNode(object):
 		self._key = key
 		self.SetColor("Red")
 		self._parent = None
+		
+	
+	def __lt__(self, other):
+		if isinstance(other, self):
+			return self.getKey() == other.getKey()
+		return false
 
 	def GetParent(self):
 		return self._parent
@@ -242,3 +259,8 @@ for i in range(10):
 	b.Insert(i, i+10)
 b.Print()
 b.Find(9).Print()
+
+node = RedBlackTreeNode(22, 44)
+
+b._replace(8, node)
+b.Print()
