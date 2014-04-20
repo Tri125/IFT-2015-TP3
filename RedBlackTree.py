@@ -5,17 +5,17 @@ class RedBlackTree(object):
 	def __init__(self):
 		self._tree = None
 
-	def Insert(self, n):
+	def Insert(self, key, value):
 		if self._tree == None:
-			self._tree = RedBlackTreeNode(n)
+			self._tree = RedBlackTreeNode(key,value)
 			self._tree.SetColor("Black")
 		else:
-			self._tree = self._tree.Insert(n)
+			self._tree = self._tree.Insert(key,value)
 			
 	def _subtree_search( self, node, key ):
-		if key == node._value:
+		if key == node.getKey():
 			return node
-		elif key < node._value:
+		elif key < node.getKey():
 			if node._left is not None:
 				return self._subtree_search( node._left, key )
 		else:
@@ -28,18 +28,26 @@ class RedBlackTree(object):
 			print ("Empty")
 		else:
 			self._tree.Print(1)
+			
 
 
 class RedBlackTreeNode(object):
-	def __init__(self, value):
+	def __init__(self, key, value):
 		self._left = None
 		self._right = None
 		self._value = value
+		self._key = key
 		self.SetColor("Red")
 		self._parent = None
 
 	def GetParent(self):
 		return self._parent
+	
+	def getKey(self):
+		return self._key
+	
+	def getValue(self):
+		return self._value
 
 	def SetParent(self, parent):
 		self._parent = parent
@@ -185,27 +193,27 @@ class RedBlackTreeNode(object):
 			return parent.Rebalance()
 
 
-	def Insert(self, value):
-		if self._value > value:
+	def Insert(self, key, value):
+		if self.getKey() > key:
 			if self.GetLeft() is None:
-				self.SetLeft(RedBlackTreeNode(value))
+				self.SetLeft(RedBlackTreeNode(key, value))
 				self.GetLeft().SetParent(self)
 				return self.GetLeft().Rebalance()
 			else:
-				return self.GetLeft().Insert(value)
+				return self.GetLeft().Insert(key, value)
 		else:
 			if self.GetRight() is None:
-				self.SetRight(RedBlackTreeNode(value))
+				self.SetRight(RedBlackTreeNode(key, value))
 				self.GetRight().SetParent(self)
 				return self.GetRight().Rebalance()        
 			else:
-				return self.GetRight().Insert(value)
+				return self.GetRight().Insert(key, value)
 
 
 	def Print(self, indent):
 		for i in range(indent):
 			print ("  ", end=" ")
-		print ("%s (%s)" % (self._value, self.GetColor()))
+		print ("%s (%s)" % (self.getKey(), self.GetColor()))
 		if self.GetLeft() is None:
 			for i in range(indent+1):
 				print ("  ", end=" ")
@@ -224,6 +232,7 @@ class RedBlackTreeNode(object):
 				
 b = RedBlackTree()
 for i in range(10):
-	b.Insert(i)
+	print(i)
+	b.Insert(i, i)
 b.Print()
 b._subtree_search(b._tree,7).Print(1)
