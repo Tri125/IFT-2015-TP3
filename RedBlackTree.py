@@ -16,8 +16,19 @@ class RedBlackTree(object):
 		return self._subtree_search(self._tree, key)
 		
 	def Remove(self, key):
-		pass
-	
+		node = self._subtree_search(self._tree, key)
+		if node is not None:
+			#Node with no children
+			if node.num_children(node) == 0 :
+				parent = node.GetParent()
+				#Node to delete is on left?
+				if parent.GetLeft() == node:
+					node.SetParent(None)
+					parent.SetLeft(None)
+				#The node we are about to delete is on the right side
+				else:
+					node.SetParent(None)
+					parent.SetRight(None)
 
 	def _replace(self, key, newNode):
 		old = self._subtree_search(self._tree, key)
@@ -62,6 +73,14 @@ class RedBlackTreeNode(object):
 		if isinstance(other, self):
 			return self.getKey() == other.getKey()
 		return false
+		
+	def num_children(self, node):
+		count = 0
+		if node.GetLeft() is not None:
+			count += 1
+		if node.GetRight() is not None:
+			count += 1
+		return count
 
 	def GetParent(self):
 		return self._parent
@@ -108,7 +127,7 @@ class RedBlackTreeNode(object):
 				return grand.GetLeft()
 		else:
 			return None
-
+	
 	def Rebalance(self):     
 		# WP case 1: tree root
 		if self.GetParent() is None:
@@ -254,13 +273,14 @@ class RedBlackTreeNode(object):
 				
 				
 b = RedBlackTree()
-for i in range(10):
+for i in range(9):
 	print(i)
 	b.Insert(i, i+10)
 b.Print()
-b.Find(9).Print()
-
-node = RedBlackTreeNode(22, 44)
-
-b._replace(8, node)
+node = b.Find(0)
+print(node.num_children(node))
+#b.Remove(3)
 b.Print()
+#node = RedBlackTreeNode(22, 44)
+
+#b._replace(8, node)
