@@ -1,5 +1,5 @@
 #http://scienceblogs.com/goodmath/2008/05/28/the-basic-balanced-search-tree/
-# Par Mark C. Chu-Carroll
+# Par Mark C. Chu-Carroll et modifié par Tristan Savaria
 
 class RedBlackTree(object):
 	def __init__(self):
@@ -31,6 +31,17 @@ class RedBlackTree(object):
 			return node
 		elif key < node.getKey():
 			if node._left is not None:
+				return self._subtree_search( node._left, key )
+		else:
+			if node._right is not None:
+				return self._subtree_search( node._right, key )
+		return None
+		
+	# N complexity, because you need to search the entire Tree if you want to delete a gold-Less Leprechaun in the (i, xi) Tree. Makes sense, right?
+	def _HORRIBLE_TP_RELATED_SEARCH( self, node, value ):
+		if value == node.getValue():
+			return node
+		elif node._left is not None:
 				return self._subtree_search( node._left, key )
 		else:
 			if node._right is not None:
@@ -238,7 +249,7 @@ class RedBlackTreeNode(object):
 		# Move up, and make my old parent my right child.
 		self.SetParent(grand)
 		if grand is not None:
-			if  grand.GetRight(parent)  == parent:
+			if  grand.GetRight()  == parent:
 				grand.SetRight(self)
 			else:
 				grand.SetLeft(self)
@@ -317,18 +328,3 @@ class RedBlackTreeNode(object):
 			
 				
 				
-b = RedBlackTree()
-for i in range(10):
-	print(i)
-	b.Insert(i, i+10)
-#b.Insert(7, 7+10)
-#b.Insert(6, 6+10)
-#b.Insert(9, 9+10)
-b.Print()
-#node = b.Find(0)
-#print(node.num_children(node))
-#node = RedBlackTreeNode(22, 44)
-
-b.Remove(3)
-b.Print()
-#b.Find(8).Print()
