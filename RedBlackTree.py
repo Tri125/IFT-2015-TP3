@@ -71,7 +71,6 @@ class RedBlackTreeNode(object):
 			elif self.GetLeft():
 				child = self.GetLeft()
 				self._replace(self, child)
-			
 			#Have right Child
 			elif self.GetRight():
 				child = self.GetRight()
@@ -79,10 +78,16 @@ class RedBlackTreeNode(object):
 			
 			#Node with no children
 			else :
-				node = RedBlackTreeNode(None, None)
-				self._replace(self, node)
-			
-		return False
+				t = self.GetParent()
+				if t.GetLeft().getKey() == self.getKey():
+					t.SetLeft(None)
+				elif t.GetRight().getKey() == self.getKey():
+					t.SetRight(None)
+				self.SetParent(None)
+				
+			self.Rebalance()
+				
+		
 		
 	
 	
@@ -91,7 +96,8 @@ class RedBlackTreeNode(object):
 		#if old is not None:
 		oldNode._key = newNode.getKey()
 		oldNode._value = newNode.getValue()
-		oldNode.SetColor(newNode.GetColor())
+		#oldNode.SetColor(newNode.GetColor())
+		oldNode.SetColor("Black")
 		oldNode.SetLeft(newNode.GetLeft())
 		oldNode.SetRight(newNode.GetRight())
 		return oldNode
