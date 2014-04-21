@@ -22,50 +22,9 @@ class RedBlackTree(object):
 		
 	def Remove(self, key):
 		node = self._subtree_search(self._tree, key)
-		if node is not None:
-			#Node with no children
-			if node.num_children(node) == 0 :
-				node.Print()
-				#print("teste" + str(node.num_children(node)))
-				#Not deleting the single node (root)
-				if self.Count() > 1:
-					parent = node.GetParent()
-					#Node to delete is on left?
-					if parent.GetLeft() == node:
-						node.SetParent(None)
-						parent.SetLeft(None)
-					#The node we are about to delete is on the right side
-					else:
-						node.SetParent(None)
-						parent.SetRight(None)
-				#Tree have only one node, the root
-				else:
-					self._tree = None
-					
-			# 1 children
-			elif node.num_children(node) == 1 :
-				child = node.GetLeft() if node.GetLeft() else node.GetRight()
-				self._replace(node, child)
-			
-			# 2 children
-			else:
-				print("allo")
-				r = node.GetLeft()
-				self._replace(node, r)
-				self.Remove(r.getKey())
-			self.count -= 1
-			
-		return False
+		node._remove(key)
+		self.count -= 1
 
-	def _replace(self, oldNode, newNode):
-		#old = self._subtree_search(self._tree, key)
-		#if old is not None:
-		oldNode._key = newNode.getKey()
-		oldNode._value = newNode.getValue()
-		oldNode.SetColor(newNode.GetColor())
-		oldNode.SetLeft(newNode.GetLeft())
-		oldNode.SetRight(newNode.GetRight())
-		return oldNode
 	
 	def _subtree_search( self, node, key ):
 		if key == node.getKey():
@@ -95,11 +54,64 @@ class RedBlackTreeNode(object):
 		self.SetColor("Red")
 		self._parent = None
 		
+	def _remove(self, key):
+		if key < self._key:
+			self.GetLeft()._remove(key)
+		elif key > self._key:
+			self.GetRight()._remove(key)
+		else:
+		
+			# 2 children
+			if self.GetLeft() and self.GetRight():
+				r = self.GetRight().find_min()
+				self._key = r.getKey()
+				self._value = r.getValue()
+				r._remove(r.getKey())
+			#Have left Child
+			elif self.GetLeft():
+				child = self.GetLeft()
+				self._replace(self, child)
+			
+			#Have right Child
+			elif self.GetRight():
+				child = self.GetRight()
+				self._replace(self, child)
+			
+			#Node with no children
+			else :
+				node = RedBlackTreeNode(None, None)
+				self._replace(self, node)
+			
+		return False
+		
 	
+	
+	def _replace(self, oldNode, newNode):
+		#old = self._subtree_search(self._tree, key)
+		#if old is not None:
+		oldNode._key = newNode.getKey()
+		oldNode._value = newNode.getValue()
+		oldNode.SetColor(newNode.GetColor())
+		oldNode.SetLeft(newNode.GetLeft())
+		oldNode.SetRight(newNode.GetRight())
+		return oldNode
+		
 	def __lt__(self, other):
 		if isinstance(other, self):
 			return self.getKey() == other.getKey()
 		return false
+		
+	def find_min(self):   # Gets minimum node (leftmost leaf) in a subtree
+		current_node = self
+		while current_node.GetLeft():
+			current_node = current_node.GetLeft()
+		return current_node
+		
+	def find_max(self):   # Gets maximum node (rightmost leaf) in a subtree
+		current_node = self
+		while current_node.GetRight():
+			current_node = current_node.GetRight()
+		return current_node
 		
 	def num_children(self, node):
 		count = 0
@@ -303,6 +315,9 @@ b = RedBlackTree()
 for i in range(10):
 	print(i)
 	b.Insert(i, i+10)
+#b.Insert(7, 7+10)
+#b.Insert(6, 6+10)
+#b.Insert(9, 9+10)
 b.Print()
 #node = b.Find(0)
 #print(node.num_children(node))
