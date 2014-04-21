@@ -25,6 +25,8 @@ class RedBlackTree(object):
 		if node is not None:
 			#Node with no children
 			if node.num_children(node) == 0 :
+				node.Print()
+				#print("teste" + str(node.num_children(node)))
 				#Not deleting the single node (root)
 				if self.Count() > 1:
 					parent = node.GetParent()
@@ -39,18 +41,31 @@ class RedBlackTree(object):
 				#Tree have only one node, the root
 				else:
 					self._tree = None
-				
+					
+			# 1 children
+			elif node.num_children(node) == 1 :
+				child = node.GetLeft() if node.GetLeft() else node.GetRight()
+				self._replace(node, child)
+			
+			# 2 children
+			else:
+				print("allo")
+				r = node.GetLeft()
+				self._replace(node, r)
+				self.Remove(r.getKey())
 			self.count -= 1
+			
+		return False
 
-	def _replace(self, key, newNode):
-		old = self._subtree_search(self._tree, key)
-		if old is not None:
-			old._key = newNode.getKey()
-			old._value = newNode.getValue()
-			old.SetColor(newNode.GetColor())
-			return old
-		else:
-			return false
+	def _replace(self, oldNode, newNode):
+		#old = self._subtree_search(self._tree, key)
+		#if old is not None:
+		oldNode._key = newNode.getKey()
+		oldNode._value = newNode.getValue()
+		oldNode.SetColor(newNode.GetColor())
+		oldNode.SetLeft(newNode.GetLeft())
+		oldNode.SetRight(newNode.GetRight())
+		return oldNode
 	
 	def _subtree_search( self, node, key ):
 		if key == node.getKey():
@@ -61,7 +76,7 @@ class RedBlackTree(object):
 		else:
 			if node._right is not None:
 				return self._subtree_search( node._right, key )
-		return node
+		return None
 
 	def Print(self):
 		if self._tree == None:
@@ -285,14 +300,14 @@ class RedBlackTreeNode(object):
 				
 				
 b = RedBlackTree()
-for i in range(1):
+for i in range(10):
 	print(i)
 	b.Insert(i, i+10)
 b.Print()
-node = b.Find(0)
-print(node.num_children(node))
-b.Remove(0)
-b.Print()
+#node = b.Find(0)
+#print(node.num_children(node))
 #node = RedBlackTreeNode(22, 44)
 
-#b._replace(8, node)
+b.Remove(3)
+b.Print()
+#b.Find(8).Print()
