@@ -21,8 +21,7 @@ class RedBlackTree(object):
 		return self._subtree_search(self._tree, key)
 		
 	def Remove(self, key):
-		node = self._subtree_search(self._tree, key)
-		node._remove(key)
+		self._tree._remove(key)
 		self.count -= 1
 
 	
@@ -71,7 +70,6 @@ class RedBlackTreeNode(object):
 		elif key > self._key:
 			self.GetRight()._remove(key)
 		else:
-		
 			# 2 children
 			if self.GetLeft() and self.GetRight():
 				r = self.GetRight().find_min()
@@ -88,19 +86,16 @@ class RedBlackTreeNode(object):
 				self._replace(self, child)
 			
 			#Node with no children
-			else :
+			elif self.GetParent():
 				t = self.GetParent()
-				if t.GetLeft().getKey() == self.getKey():
-					t.SetLeft(None)
-				elif t.GetRight().getKey() == self.getKey():
-					t.SetRight(None)
-				self.SetParent(None)
+				t.Print()
+				if t.GetLeft() and t.GetLeft().getKey() == self.getKey():
+					t._left = None
+				elif t.GetRight() and t.GetRight().getKey() == self.getKey():
+					t._right = None
+				self._parent = None
 				
-			self.Rebalance()
-				
-		
-		
-	
+
 	
 	def _replace(self, oldNode, newNode):
 		#old = self._subtree_search(self._tree, key)
@@ -324,6 +319,8 @@ class RedBlackTreeNode(object):
 			print ("None(Black)")
 		else:
 			self.GetRight().Print(indent+1)
+			
+
 			
 			
 				
